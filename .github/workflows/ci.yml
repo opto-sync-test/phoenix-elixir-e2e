@@ -1,0 +1,30 @@
+name: Phoenix Elixir E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out recursively
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Verify pinned source revisions
+        run: |
+          python3 -m json.tool opto-sync-pin.json >/dev/null
+          test "$(git -C vendor/opto-sync-clients rev-parse HEAD)" = "$(python3 -c 'import json; print(json.load(open("opto-sync-pin.json"))["clientsCommit"])')"
+          test "$(git -C vendor/opto-sync-clients/syncer.c rev-parse HEAD)" = "$(python3 -c 'import json; print(json.load(open("opto-sync-pin.json"))["coreCommit"])')"
+
+      - name: Build the Phoenix, Rustler, Rust, and C stack
+        run: docker build --target test --tag phoenix-elixir-e2e .
+
+      - name: Run the full HTTP integration test
+        run: docker run phoenix-elixir-e2e

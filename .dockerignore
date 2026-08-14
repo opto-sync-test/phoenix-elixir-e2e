@@ -1,0 +1,8 @@
+.git
+_build
+deps
+vendor/opto-sync-clients/.git
+vendor/opto-sync-clients/syncer.c/.git
+vendor/opto-sync-clients/syncer.c/bindings/beam/_build
+vendor/opto-sync-clients/syncer.c/bindings/beam/deps
+vendor/opto-sync-clients/syncer.c/bindings/beam/native/syncer_nif/target
