@@ -3,7 +3,11 @@ defmodule PhoenixElixirE2E.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [PhoenixElixirE2EWeb.Endpoint]
+    children = [
+      PhoenixElixirE2EWeb.Endpoint,
+      {PhoenixElixirE2E.SyncWorker, base_url: "http://127.0.0.1:4051", bearer_token: "e2e-token"}
+    ]
+
     Supervisor.start_link(children, strategy: :one_for_one, name: PhoenixElixirE2E.Supervisor)
   end
 

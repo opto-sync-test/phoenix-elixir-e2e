@@ -11,6 +11,12 @@ This repository proves the Opto-Sync boundary in a Phoenix application on the BE
 - nested objects and array elements matched by `id` preserve independent server and client fields;
 - the response reports the native engine version.
 
+The OTP application also supervises a `GenServer` background sync worker. Its
+test kills the worker, waits for the supervisor to replace it, and then drains
+mobile and desktop lanes concurrently through Phoenix. Whole-batch retry is
+bounded and safe for response-loss cases because OptoSync reconciliation is
+idempotent.
+
 `vendor/opto-sync-clients` is a Git submodule and includes the nested `syncer.c` submodule. `opto-sync-pin.json` makes both dependency revisions explicit.
 
 ## Run locally
